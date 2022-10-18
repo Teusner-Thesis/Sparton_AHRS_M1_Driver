@@ -11,9 +11,12 @@ include(FetchContent) # once in the project to include the module
 FetchContent_Declare(rtac_asio GIT_REPOSITORY https://github.com/pnarvor/rtac_asio.git)
 FetchContent_MakeAvailable(rtac_asio)
 
+# Driver Include dir
+set(SPARTON_M1_DRIVER_HEADERS include)
+
 # Driver
 add_library(sparton_ahrs_m1_driver src/sparton_ahrs_m1_driver.cpp)
-target_include_directories(sparton_ahrs_m1_driver PUBLIC include)
+target_include_directories(sparton_ahrs_m1_driver PUBLIC ${SPARTON_M1_DRIVER_HEADERS})
 target_link_libraries(sparton_ahrs_m1_driver PUBLIC rtac_asio)
 
 # Detecting if project is included into another
