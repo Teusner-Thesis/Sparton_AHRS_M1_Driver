@@ -9,33 +9,54 @@
 #include <chrono>
 #include <thread>
 
+bool SpartonAHRSM1Driver::writeAck(std::string s) {
+    std::string data(s.size() + 2, '\0');
+    serial_->write(s.size(), (const uint8_t*)s.c_str());
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    return (s.substr(0, s.size() - 2) + "OK\r\n" == data);
+}
 
-void SpartonAHRSM1Driver::reset() {
-    sync_serial_.writeString("reset\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    // Disabling input echo from the ahrs
-    sync_serial_.writeString("0 echo!\r\n");
+bool SpartonAHRSM1Driver::reset() {
+    bool ret = true;
+
+    // Reseting ahrs
+    std::string msg = "reset\r\n";
+    serial_->write(msg.size(), (const uint8_t*)msg.c_str());
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+    serial_->flush();
 
     // Setting up accelerometer gathering function in (m/s^2)
-    sync_serial_.writeString("accelpScaleFactor f0.01 set\r\n");
-    sync_serial_.writeString(": accel 8 8 accelpScaled di@ @ ff.\r\n.\"  \"\r\n8 8 accelpScaled di@ 4 + @ ff.\r\n.\"  \"\r\n8 8 accelpScaled di@ 8 + @ ff.\r\ncr\r\n;\r\n");
+    ret &= writeAck("accelpScaleFactor f0.01 set\r\n");
+    ret &= writeAck(": accel 8 8 accelpScaled di@ @ ff. .\"  \" 8 8 accelpScaled di@ 4 + @ ff. .\"  \" 8 8 accelpScaled di@ 8 + @ ff. cr ;\r\n");
 
     // Setting up gyroscope gathering function in (rad/s)
-    sync_serial_.writeString(": gyro 8 8 gyropScaled di@ @ ff.\r\n.\"  \"\r\n8 8 gyropScaled di@ 4 + @ ff.\r\n.\"  \"\r\n8 8 gyropScaled di@ 8 + @ ff.\r\ncr\r\n;\r\n");
+    ret &= writeAck(": gyro 8 8 gyropScaled di@ @ ff. .\"  \" 8 8 gyropScaled di@ 4 + @ ff. .\"  \" 8 8 gyropScaled di@ 8 + @ ff. cr ;\r\n");
 
     // Setting up magnetometer gathering function in (rad/s)
-    sync_serial_.writeString("magpScaleFactor f0.0001 set\r\n");
-    sync_serial_.writeString(": mag 8 8 magpScaled di@ @ ff.\r\n.\"  \"\r\n8 8 magpScaled di@ 4 + @ ff.\r\n.\"  \"\r\n8 8 magpScaled di@ 8 + @ ff.\r\ncr\r\n;\r\n");
+    ret &= writeAck("magpScaleFactor f0.0001 set\r\n");
+    ret &= writeAck(": mag 8 8 magpScaled di@ @ ff. .\"  \" 8 8 magpScaled di@ 4 + @ ff. .\"  \" 8 8 magpScaled di@ 8 + @ ff. cr ;\r\n");
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    // Disabling input echo from the ahrs
+    msg = "0 echo!\r\n";
+    serial_->write(msg.size(), (const uint8_t*)msg.c_str());
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    serial_->flush();
+
+    return ret;
 }
+
+
+    
 
 std::vector<float> SpartonAHRSM1Driver::read_accelerometer() {
     // Requesting accelerations
-    sync_serial_.flush(SyncSerial::FlushType::FlushBoth);
-    sync_serial_.writeString("accel\r\n");
-    std::istringstream iss(sync_serial_.readLine());
+    serial_->write(7, (uint8_t*)"accel\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    std::istringstream iss(data.substr(0, data.find("\n")));
 
     // Preparing return
     std::vector<float> accelerometer;
@@ -50,9 +71,12 @@ std::vector<float> SpartonAHRSM1Driver::read_accelerometer() {
 
 std::vector<float> SpartonAHRSM1Driver::read_magnetometer() {
     // Requesting accelerations
-    sync_serial_.flush(SyncSerial::FlushType::FlushBoth);
-    sync_serial_.writeString("mag\r\n");
-    std::istringstream iss(sync_serial_.readLine());
+    serial_->write(5, (uint8_t*)"mag\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    std::istringstream iss(data.substr(0, data.find("\n")));
 
     // Preparing return
     std::vector<float> magnetometer;
@@ -67,9 +91,12 @@ std::vector<float> SpartonAHRSM1Driver::read_magnetometer() {
 
 std::vector<float> SpartonAHRSM1Driver::read_gyroscope() {
     // Requesting accelerations
-    sync_serial_.flush(SyncSerial::FlushType::FlushBoth);
-    sync_serial_.writeString("gyro\r\n");
-    std::istringstream iss(sync_serial_.readLine());
+    serial_->write(6, (uint8_t*)"gyro\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    std::istringstream iss(data.substr(0, data.find("\n")));
 
     // Preparing return
     std::vector<float> gyroscope;

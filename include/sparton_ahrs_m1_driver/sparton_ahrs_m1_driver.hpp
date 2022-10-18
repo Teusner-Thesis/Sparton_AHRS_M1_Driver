@@ -2,9 +2,11 @@
 
 #include "sparton_ahrs_m1_driver/SyncSerial.hpp"
 
-#include <boost/asio.hpp>
 #include <string>
 #include <iostream>
+
+#include <rtac_asio/Stream.h>
+#include <rtac_asio/SerialStream.h>
 
 
 class SpartonAHRSM1Driver {
@@ -17,15 +19,24 @@ class SpartonAHRSM1Driver {
         * \throws boost::system::system_error if cannot open the
         * serial device
         */
-        SpartonAHRSM1Driver(std::string port, unsigned int baud_rate) : sync_serial_(port, baud_rate) {
+        SpartonAHRSM1Driver(std::string port, unsigned int baud_rate) : serial_(rtac::asio::Stream::CreateSerial(port, baud_rate)) {
             reset();
         };
 
         /**
         * Reset and initialize the AHRS with value getters
+        * \return bool reset successful
         * \throws boost::system::system_error on failure
         */
-        void reset();
+        bool reset();
+
+        /**
+        * Write a std::string and check the acknowledgment
+        * \return bool the acknowledgment
+        * \throws boost::system::system_error if cannot open the
+        * serial device
+        */
+        bool writeAck(std::string s);
 
         /**
         * Read values from accelerometer.
@@ -55,5 +66,5 @@ class SpartonAHRSM1Driver {
         std::vector<float> read_gyroscope();
 
     private:
-        SyncSerial sync_serial_;        
+        rtac::asio::Stream::Ptr serial_;       
 };
