@@ -1,7 +1,5 @@
 #pragma once
 
-#include "sparton_ahrs_m1_driver/SyncSerial.hpp"
-
 #include <string>
 #include <iostream>
 
