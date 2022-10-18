@@ -17,8 +17,9 @@ class SpartonAHRSM1Driver {
         * \throws boost::system::system_error if cannot open the
         * serial device
         */
-        SpartonAHRSM1Driver(std::string port, unsigned int baud_rate) : serial_(rtac::asio::Stream::CreateSerial(port, baud_rate)) {
-            reset();
+        SpartonAHRSM1Driver(std::string port, unsigned int baud_rate, bool reset_on_init=false) : serial_(rtac::asio::Stream::CreateSerial(port, baud_rate)) {
+            if (reset_on_init)
+                reset();
         };
 
         /**
