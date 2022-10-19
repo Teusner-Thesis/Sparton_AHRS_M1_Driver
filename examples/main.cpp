@@ -6,6 +6,8 @@
 int main() {
     SpartonAHRSM1Driver s("/dev/ttyUSB0", 115200);
 
+    s.reset();
+
     for (int i=0; i<1000; ++i) {
         std::vector<float> v = s.read_gyroscope();
         std::vector<float> w = s.read_magnetometer();
