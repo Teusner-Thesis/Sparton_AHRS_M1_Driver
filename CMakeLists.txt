@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # rtac_asio
 include(FetchContent) # once in the project to include the module
 
-FetchContent_Declare(rtac_asio GIT_REPOSITORY https://github.com/pnarvor/rtac_asio.git GIT_TAG main)
+FetchContent_Declare(rtac_asio GIT_REPOSITORY https://github.com/pnarvor/rtac_asio.git GIT_TAG master)
 FetchContent_MakeAvailable(rtac_asio)
 
 # Driver Include dir
