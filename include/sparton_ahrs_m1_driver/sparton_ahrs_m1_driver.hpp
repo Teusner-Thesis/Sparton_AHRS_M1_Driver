@@ -18,6 +18,7 @@ class SpartonAHRSM1Driver {
         * serial device
         */
         SpartonAHRSM1Driver(std::string port, unsigned int baud_rate, bool reset_on_init=false) : serial_(rtac::asio::Stream::CreateSerial(port, baud_rate)) {
+            serial_->start();
             if (reset_on_init)
                 reset();
         };
