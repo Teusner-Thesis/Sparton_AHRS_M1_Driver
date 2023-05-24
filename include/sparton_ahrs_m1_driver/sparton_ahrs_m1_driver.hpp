@@ -65,6 +65,14 @@ class SpartonAHRSM1Driver {
         */
         std::vector<float> read_gyroscope();
 
+        /**
+        * Read atitude values from imu.
+        * \return std::vector<float> quaternion along x, y, z, w coordinates
+        * \throws boost::system::system_error if cannot open the
+        * serial device
+        */
+        std::vector<float> read_quaternion();
+
     private:
         rtac::asio::Stream::Ptr serial_;       
 };

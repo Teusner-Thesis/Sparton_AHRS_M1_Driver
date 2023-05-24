@@ -37,6 +37,9 @@ bool SpartonAHRSM1Driver::reset() {
     ret &= writeAck("magpScaleFactor f0.0001 set\r\n");
     ret &= writeAck(": mag 8 8 magpScaled di@ @ ff. .\"  \" 8 8 magpScaled di@ 4 + @ ff. .\"  \" 8 8 magpScaled di@ 8 + @ ff. cr ;\r\n");
 
+    // Setting up quaternion gathering function
+    ret &= writeAck(": q 8 8 quaternion di@ @ ff. .\"  \" 8 8 quaternion di@ 4 + @ ff. .\"  \" 8 8 quaternion di@ 8 + @ ff. .\"  \" 8 8 quaternion di@ 12 + @ ff. cr ;\r\n");
+
     // Disabling input echo from the ahrs
     msg = "0 echo!\r\n";
     serial_->write(msg.size(), (const uint8_t*)msg.c_str());
@@ -45,9 +48,6 @@ bool SpartonAHRSM1Driver::reset() {
 
     return ret;
 }
-
-
-    
 
 std::vector<float> SpartonAHRSM1Driver::read_accelerometer() {
     // Requesting accelerations
@@ -107,4 +107,24 @@ std::vector<float> SpartonAHRSM1Driver::read_gyroscope() {
         std::back_inserter(gyroscope));
 
     return gyroscope;
+}
+
+std::vector<float> SpartonAHRSM1Driver::read_quaternion() {
+    // Requesting accelerations
+    serial_->write(4, (uint8_t*)"q\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    std::istringstream iss(data.substr(0, data.find("\n")));
+
+    // Preparing return
+    std::vector<float> quaternion;
+
+    // Getting values from the stream using >> operator on istream
+    std::copy(std::istream_iterator<float>(iss),
+        std::istream_iterator<float>(),
+        std::back_inserter(quaternion));
+
+    return quaternion;
 }
