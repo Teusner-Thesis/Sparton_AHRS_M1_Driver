@@ -25,7 +25,7 @@ inline void quaternion2euler(double qw, double qx, double qy, double qz, double*
 int main() {
     SpartonAHRSM1Driver s("/dev/ttyUSB0", 115200);
 
-    bool ret = s.reset();
+    bool ret = s.init();
 
     if (!ret) {
         std::cerr << "Reset not successfull" << std::endl;
@@ -33,7 +33,7 @@ int main() {
     else {
         std::cout << "Reset successfull" << std::endl;
         while (true) {
-            std::vector<float> z = s.read_quaternion();
+            std::vector<double> z = s.read_quaternion();
 
             // std::copy(z.begin(), z.end(), std::ostream_iterator<float>(std::cout, ", "));
             // std::cout << std::endl;
