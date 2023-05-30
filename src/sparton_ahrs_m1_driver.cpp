@@ -67,56 +67,56 @@ bool SpartonAHRSM1Driver::init() {
 
     // Setting up accelerometer gathering function in (m/s^2)
     ret &= writeAck("accelpScaleFactor f0.01 set\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= forgetFunction("accel");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": accel 8 8 accelpScaled di@ @ ff. .\"  \" 8 8 accelpScaled di@ 4 + @ ff. .\"  \" 8 8 accelpScaled di@ 8 + @ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Setting up quaternion gathering function
     ret &= forgetFunction("accelVar");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": accelVar 8 8 accelVariance di@ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Setting up gyroscope gathering function in (rad/s)
     ret &= forgetFunction("gyro");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": gyro 8 8 gyropScaled di@ @ ff. .\"  \" 8 8 gyropScaled di@ 4 + @ ff. .\"  \" 8 8 gyropScaled di@ 8 + @ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Setting up quaternion gathering function
     ret &= forgetFunction("gyroVar");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": gyroVar 8 8 gyroVariance di@ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Setting up magnetometer gathering function in (rad/s)
     ret &= writeAck("magpScaleFactor f0.0001 set\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= forgetFunction("mag");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": mag 8 8 magpScaled di@ @ ff. .\"  \" 8 8 magpScaled di@ 4 + @ ff. .\"  \" 8 8 magpScaled di@ 8 + @ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Setting up quaternion gathering function
     ret &= forgetFunction("q");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
     ret &= writeAck(": q 8 8 quaternion di@ @ ff. .\"  \" 8 8 quaternion di@ 4 + @ ff. .\"  \" 8 8 quaternion di@ 8 + @ ff. .\"  \" 8 8 quaternion di@ 12 + @ ff. cr ;\r\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     serial_->flush();
 
     // Disable echo
