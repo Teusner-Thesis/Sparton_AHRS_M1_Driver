@@ -19,6 +19,7 @@ class SpartonAHRSM1Driver {
         */
         SpartonAHRSM1Driver(std::string port, unsigned int baud_rate, bool call_init=false) : serial_(rtac::asio::Stream::CreateSerial(port, baud_rate)) {
             serial_->start();
+            serial_->enable_io_dump("./rx.log", "./tx.log");
             if (call_init) {
                 init();
             }
@@ -114,7 +115,7 @@ class SpartonAHRSM1Driver {
         * \throws boost::system::system_error if cannot open the
         * serial device
         */
-        bool writeAck(std::string s);
+        bool writeAck(std::vector<std::string> s);
 
         /**
         * Forget a defined function in init and check the acknowledgment

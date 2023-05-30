@@ -28,10 +28,10 @@ int main() {
     bool ret = s.init();
 
     if (!ret) {
-        std::cerr << "Reset not successfull" << std::endl;
+        std::cerr << "Init not successfull" << std::endl;
     }
     else {
-        std::cout << "Reset successfull" << std::endl;
+        std::cout << "Init successfull" << std::endl;
         while (true) {
             std::vector<double> z = s.read_quaternion();
 
@@ -62,7 +62,4 @@ int main() {
             std::cout << std::endl;
         }
     }
-
-
-    getchar();
 }
