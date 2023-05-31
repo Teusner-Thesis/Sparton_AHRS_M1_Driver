@@ -88,7 +88,7 @@ void SpartonAHRSM1Driver::enable_echo() {
     // Disabling input echo from the ahrs
     std::string msg = "1 echo!\r\n";
     serial_->write(msg.size(), (const uint8_t*)msg.c_str());
-    std::this_thread::sleep_for(std::chrono::milliseconds(15));
+    std::this_thread::sleep_for(std::chrono::milliseconds(25));
     serial_->flush();
 }
 
@@ -96,7 +96,7 @@ void SpartonAHRSM1Driver::disable_echo() {
     // Disabling input echo from the ahrs
     std::string msg = "0 echo!\r\n";
     serial_->write(msg.size(), (const uint8_t*)msg.c_str());
-    std::this_thread::sleep_for(std::chrono::milliseconds(15));
+    std::this_thread::sleep_for(std::chrono::milliseconds(25));
     serial_->flush();
 }
 
