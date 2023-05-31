@@ -199,7 +199,6 @@ std::vector<double> SpartonAHRSM1Driver::read_magnetometer() {
     std::string data(1024, '\0');
     serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
 
-    std::cout <<  data.substr(0, data.find("\n")) << std::endl;
     std::istringstream iss(data.substr(0, data.find("\n")));
 
     // Preparing return
