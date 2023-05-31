@@ -66,6 +66,8 @@ bool SpartonAHRSM1Driver::forgetFunction(std::string function_name) {
     serial_->flush();
     serial_->write(command.size(), reinterpret_cast<const uint8_t*>(const_cast<char *>(command.c_str())));
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
+
     // Read acknowledgement
     std::string data(command.size() + 18, '\0');
     serial_->read_until(data.size(), (uint8_t*)(data.c_str()), '\n', 1000);
@@ -88,7 +90,7 @@ void SpartonAHRSM1Driver::enable_echo() {
     // Disabling input echo from the ahrs
     std::string msg = "1 echo!\r\n";
     serial_->write(msg.size(), (const uint8_t*)msg.c_str());
-    std::this_thread::sleep_for(std::chrono::milliseconds(25));
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
     serial_->flush();
 }
 
@@ -96,7 +98,7 @@ void SpartonAHRSM1Driver::disable_echo() {
     // Disabling input echo from the ahrs
     std::string msg = "0 echo!\r\n";
     serial_->write(msg.size(), (const uint8_t*)msg.c_str());
-    std::this_thread::sleep_for(std::chrono::milliseconds(25));
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
     serial_->flush();
 }
 
