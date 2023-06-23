@@ -63,6 +63,15 @@ class SpartonAHRSM1Driver {
         std::vector<double> read_accelerometer();
 
         /**
+        * Read raw values from accelerometer.
+        * \return std::vector<double> raw accelerations along x, y, z axis
+        * the result is in (m/s^2)
+        * \throws boost::system::system_error if cannot open the
+        * serial device
+        */
+        std::vector<double> read_raw_accelerometer();
+
+        /**
         * Read accelerometer variance.
         * \return double accelerometer variance
         * the result is in (rad/s)
@@ -79,6 +88,15 @@ class SpartonAHRSM1Driver {
         * serial device
         */
         std::vector<double> read_magnetometer();
+
+        /**
+        * Read raw values from magnetometer.
+        * \return std::vector<double> raw magnetic flux along x, y, z axis
+        * the result is in (T)
+        * \throws boost::system::system_error if cannot open the
+        * serial device
+        */
+        std::vector<double> read_raw_magnetometer();
 
         /**
         * Read values from gyroscope.

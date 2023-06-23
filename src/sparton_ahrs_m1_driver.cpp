@@ -120,6 +120,15 @@ bool SpartonAHRSM1Driver::init() {
         "8 8 accelpScaled di@ 8 + @ ff. cr ;\r\n"
     };
     ret &= writeAck(accel);
+
+    // Setting up raw accelerometer gathering function in (m/s^2)
+    ret &= forgetFunction("raccel");
+    std::vector<std::string> accel = {
+        ": raccel 8 8 accelr di@ @ ff. .\"  \"\r\n",
+        "8 8 accelr di@ 4 + @ ff. .\"  \"\r\n",
+        "8 8 accelr di@ 8 + @ ff. cr ;\r\n"
+    };
+    ret &= writeAck(accel);
     
     // Setting up acceleration variance gathering function
     ret &= forgetFunction("accelVar");
@@ -144,6 +153,14 @@ bool SpartonAHRSM1Driver::init() {
         ": mag 8 8 magpScaled di@ @ ff. .\"  \"\r\n",
         "8 8 magpScaled di@ 4 + @ ff. .\"  \"\r\n",
         "8 8 magpScaled di@ 8 + @ ff. cr ;\r\n"
+    });
+
+    // Setting up raw magnetometer gathering function in (rad/s)
+    ret &= forgetFunction("rmag");
+    ret &= writeAck({
+        ": rmag 8 8 magr di@ @ ff. .\"  \"\r\n",
+        "8 8 magr di@ 4 + @ ff. .\"  \"\r\n",
+        "8 8 magr di@ 8 + @ ff. cr ;\r\n"
     });
 
     // Setting up quaternion gathering function
@@ -181,6 +198,26 @@ std::vector<double> SpartonAHRSM1Driver::read_accelerometer() {
     return accelerometer;
 }
 
+std::vector<double> SpartonAHRSM1Driver::read_raw_accelerometer() {
+    // Requesting accelerations
+    serial_->write(7, (uint8_t*)"raccel\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+    std::istringstream iss(data.substr(0, data.find("\n")));
+
+    // Preparing return
+    std::vector<double> accelerometer;
+
+    // Getting values from the stream using >> operator on istream
+    std::copy(std::istream_iterator<double>(iss),
+        std::istream_iterator<double>(),
+        std::back_inserter(accelerometer));
+
+    return accelerometer;
+}
+
 double SpartonAHRSM1Driver::read_accelerometer_variance() {
     // Requesting accelerations
     serial_->write(11, (uint8_t*)"accelVar\r\n");
@@ -194,6 +231,27 @@ double SpartonAHRSM1Driver::read_accelerometer_variance() {
 std::vector<double> SpartonAHRSM1Driver::read_magnetometer() {
     // Requesting accelerations
     serial_->write(6, (uint8_t*)"mag\r\n");
+
+    // Reading data
+    std::string data(1024, '\0');
+    serial_->read_until(data.size(), (uint8_t*)data.c_str(), '\n', 1000);
+
+    std::istringstream iss(data.substr(0, data.find("\n")));
+
+    // Preparing return
+    std::vector<double> magnetometer;
+
+    // Getting values from the stream using >> operator on istream
+    std::copy(std::istream_iterator<double>(iss),
+        std::istream_iterator<double>(),
+        std::back_inserter(magnetometer));
+
+    return magnetometer;
+}
+
+std::vector<double> SpartonAHRSM1Driver::read_raw_magnetometer() {
+    // Requesting accelerations
+    serial_->write(6, (uint8_t*)"rmag\r\n");
 
     // Reading data
     std::string data(1024, '\0');
