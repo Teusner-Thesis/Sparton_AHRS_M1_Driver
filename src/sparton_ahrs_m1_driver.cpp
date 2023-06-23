@@ -123,12 +123,12 @@ bool SpartonAHRSM1Driver::init() {
 
     // Setting up raw accelerometer gathering function in (m/s^2)
     ret &= forgetFunction("raccel");
-    std::vector<std::string> accel = {
+    std::vector<std::string> raccel = {
         ": raccel 8 8 accelr di@ @ ff. .\"  \"\r\n",
         "8 8 accelr di@ 4 + @ ff. .\"  \"\r\n",
         "8 8 accelr di@ 8 + @ ff. cr ;\r\n"
     };
-    ret &= writeAck(accel);
+    ret &= writeAck(raccel);
     
     // Setting up acceleration variance gathering function
     ret &= forgetFunction("accelVar");
@@ -199,7 +199,7 @@ std::vector<double> SpartonAHRSM1Driver::read_accelerometer() {
 }
 
 std::vector<double> SpartonAHRSM1Driver::read_raw_accelerometer() {
-    // Requesting accelerations
+    // Requesting raw accelerations
     serial_->write(7, (uint8_t*)"raccel\r\n");
 
     // Reading data
@@ -219,7 +219,7 @@ std::vector<double> SpartonAHRSM1Driver::read_raw_accelerometer() {
 }
 
 double SpartonAHRSM1Driver::read_accelerometer_variance() {
-    // Requesting accelerations
+    // Requesting accelerations covariance
     serial_->write(11, (uint8_t*)"accelVar\r\n");
 
     // Reading data
@@ -229,7 +229,7 @@ double SpartonAHRSM1Driver::read_accelerometer_variance() {
 }
 
 std::vector<double> SpartonAHRSM1Driver::read_magnetometer() {
-    // Requesting accelerations
+    // Requesting magneometers
     serial_->write(6, (uint8_t*)"mag\r\n");
 
     // Reading data
@@ -250,7 +250,7 @@ std::vector<double> SpartonAHRSM1Driver::read_magnetometer() {
 }
 
 std::vector<double> SpartonAHRSM1Driver::read_raw_magnetometer() {
-    // Requesting accelerations
+    // Requesting raw magnetometers
     serial_->write(6, (uint8_t*)"rmag\r\n");
 
     // Reading data
@@ -271,7 +271,7 @@ std::vector<double> SpartonAHRSM1Driver::read_raw_magnetometer() {
 }
 
 std::vector<double> SpartonAHRSM1Driver::read_gyroscope() {
-    // Requesting accelerations
+    // Requesting gyroscope
     serial_->write(7, (uint8_t*)"gyro\r\n");
 
     // Reading data
@@ -291,7 +291,7 @@ std::vector<double> SpartonAHRSM1Driver::read_gyroscope() {
 }
 
 double SpartonAHRSM1Driver::read_gyroscope_variance() {
-    // Requesting accelerations
+    // Requesting gyroscope variance
     serial_->write(10, (uint8_t*)"gyroVar\r\n");
 
     // Reading data
@@ -301,7 +301,7 @@ double SpartonAHRSM1Driver::read_gyroscope_variance() {
 }
 
 std::vector<double> SpartonAHRSM1Driver::read_quaternion() {
-    // Requesting accelerations
+    // Requesting orientation
     serial_->write(4, (uint8_t*)"q\r\n");
 
     // Reading data
