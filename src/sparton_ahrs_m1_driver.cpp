@@ -200,7 +200,7 @@ std::vector<double> SpartonAHRSM1Driver::read_accelerometer() {
 
 std::vector<double> SpartonAHRSM1Driver::read_raw_accelerometer() {
     // Requesting raw accelerations
-    serial_->write(7, (uint8_t*)"raccel\r\n");
+    serial_->write(8, (uint8_t*)"raccel\r\n");
 
     // Reading data
     std::string data(1024, '\0');
@@ -251,7 +251,7 @@ std::vector<double> SpartonAHRSM1Driver::read_magnetometer() {
 
 std::vector<double> SpartonAHRSM1Driver::read_raw_magnetometer() {
     // Requesting raw magnetometers
-    serial_->write(6, (uint8_t*)"rmag\r\n");
+    serial_->write(7, (uint8_t*)"rmag\r\n");
 
     // Reading data
     std::string data(1024, '\0');
