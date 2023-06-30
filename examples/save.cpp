@@ -22,6 +22,9 @@ int main(int argc, char **argv) {
 
     auto t0 = std::chrono::system_clock::now();
 
+    // desired frame rate
+    typedef std::chrono::duration<int, std::ratio<1, 50>> frame_duration;
+
     while (true) {
         auto t1 = std::chrono::system_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
@@ -34,5 +37,8 @@ int main(int argc, char **argv) {
         std::vector<double> q;
         q = driver.read_quaternion();
         file << time / 1000. << ","  << m[0] << "," << m[1] << "," << m[2] << " " << a[0] << "," << a[1] << "," << a[2] << "," << g[0] << "," << g[1] << "," << g[2] << "," << q[0] << "," << q[1] << "," << q[2] << "," << q[3] << "\n";
+
+        auto end_time = t1 + frame_duration(1);
+        std::this_thread::sleep_until(end_time);
     }
 }
